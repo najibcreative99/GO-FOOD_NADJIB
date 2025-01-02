@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Food</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        /* Warna dan Font */
+        :root {
+    --primary-color: #28a745;
+    --secondary-color: #f8f9fa;
+    --text-color: #000;
+    --card-bg: #fff;
+}
+
+/* Style untuk tombol Cari dan Mode Gelap */
+#search-button,
+#theme-toggle {
+    color: var(--text-color);
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover Effect */
+#search-button:hover,
+#theme-toggle:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+/* Mode Gelap */
+#search-input {
+    border: 2px solid var(--primary-color);
+    border-radius: 20px; /* Ubah untuk tampilan yang lebih elegan */
+    padding: 10px 15px; /* Tambahkan padding untuk ukuran yang lebih nyaman */
+    transition: border-color 0.3s ease;
+}
+
+#search-button,
+#theme-toggle {
+    color: #fff; /* Ubah warna teks menjadi putih */
+    background-color: var(--primary-color);
+    border: 2px solid var(--primary-color); /* Ganti border menjadi lebih tebal */
+    border-radius: 20px; /* Ubah menjadi lebih bulat */
+    padding: 8px 15px; /* Ubah padding untuk ukuran yang lebih kecil */
+    font-weight: bold; /* Buat teks lebih tebal */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover Effect */
+#search-button:hover,
+#theme-toggle:hover {
+    background-color: darken(var(--primary-color), 10%); /* Ubah warna saat hover */
+    color: #fff; /* Pastikan teks tetap putih */
+    border-color: darken(var(--primary-color), 10%); /* Ubah warna border saat hover */
+}
+
+/* Dark Mode */
+[data-theme="dark"] #search-input {
+    border: 2px solid #fff; /* Ganti border menjadi putih di dark mode */
+}
+
+[data-theme="dark"] #search-button,
+[data-theme="dark"] #theme-toggle {
+    background-color: #444; /* Ubah warna background di dark mode */
+    border-color: #fff; /* Ubah warna border di dark mode */
+}
+
+[data-theme="dark"] #search-button:hover,
+[data-theme="dark"] #theme-toggle:hover {
+    background-color: #666; /* Ubah warna saat hover di dark mode */
+    color: #fff;
+    border-color: #fff;
+}
+
+
+body {
+    background-color: var(--background-color);
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+}
+
+
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+        
+        /* Mengatur jarak antar item */
+        .form-inline {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 300px; /* Atur lebar sesuai kebutuhan */
+}
+
+/* Mengatur jarak antar item */
+.gx-3 {
+    gap: 12px !important;
+}
+
+
+/* Kartu makanan */
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--secondary-color);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-body {
+    padding-top: 10px; /* Atur padding atas sesuai kebutuhan */
+    padding-bottom: 10px; /* Atur padding bawah sesuai kebutuhan */
+}
+
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-wrapper {
+    overflow: hidden; /* Mencegah gambar meluap */
+    min-height: 200px; /* Atur tinggi minimum kontainer */
+    
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto; /* Mengatur tinggi otomatis */
+    object-fit: cover; /* Tetap menggunakan cover */
+    margin-bottom: -200px;
+}
+
+
+
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: var(--price-color);
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .rating {
+            font-size: 0.8rem;
+            color: gold;
+            margin: 0.2rem 0;
+        }
+
+        /* Tombol Tambah */
+        .add-to-cart {
+    background-color: #28a745; /* Warna latar belakang hijau */
+    border: 2px solid #28a745; /* Warna border hijau */
+    color: #fff; /* Warna teks putih */
+    border-radius: 20px; /* Sudut bulat untuk tombol */
+    padding: 10px; /* Padding untuk tombol */
+    font-weight: bold; /* Teks tebal */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover Effect */
+.add-to-cart:hover {
+    background-color: #5a5a5a; /* Ubah warna saat hover */
+    border-color: #dbdbdb; /* Ubah warna border saat hover */
+}
+
+        /* Kontrol Kuantitas */
+        .quantity-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .quantity-controls .btn {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: var(--button-border-radius);
+            transition: background-color 0.3s ease;
+        }
+
+        .quantity-controls .btn:hover {
+            background-color: darken(var(--primary-color), 10%);
+        }
+
+        .quantity-controls span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+
+        .rating {
+    color: gold;
+}
+
+/* Icon Favorit */
+.favorite {
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.favorite:hover {
+    transform: scale(1.2);
+}
+
+        /* Media Query untuk Responsivitas */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            .card-title {
+                font-size: 0.9rem;
+            }
+
+            .card-text {
+                font-size: 0.8rem;
+            }
+
+            .add-to-cart {
+                font-size: 0.8rem;
+            }
+            .form-control {
+                width: 100%; /* Lebar penuh di perangkat kecil */
+            }
+            /* Mengatur tampilan tombol pencarian */
+            .form-inline {
+                display: flex; /* Menggunakan flexbox */
+                justify-content: center; /* Menyusun konten di tengah */
+                align-items: center; /* Menyusun elemen vertikal di tengah */
+                flex-wrap: nowrap; /* Menghindari pembungkusan elemen */
+                margin-bottom: 10px; /* Memberikan jarak bawah */
+            }
+
+            #search-form {
+        display: flex;
+        justify-content: center; /* Pusatkan form di mobile */
+        align-items: center; /* Pusatkan isi di dalam form */
+    }
+    
+    #search-input {
+        flex: 1; /* Ambil ruang yang tersedia */
+        margin-right: 5px; /* Jarak antar input dan tombol */
+    }
+
+    #search-button {
+        flex-shrink: 0; /* Pastikan tombol tidak menyusut */
+    }
+
+            /* Mengatur tampilan tombol mode gelap */
+            #theme-toggle {
+                width: auto; /* Membuat tombol mode gelap lebar otomatis */
+                margin-top: 10px; /* Memberikan jarak atas */
+                align-self: flex-end; /* Menyusun tombol mode gelap di kanan */
+            }
+            .add-to-cart {
+        font-size: 14px; /* Ubah ukuran font untuk tampilan mobile */
+        padding: 8px; /* Sesuaikan padding untuk mobile */
+    }
+        }
+/* Rating */
+.rating {
+    font-size: 0.8rem;
+}
+
+/* Tombol favorit */
+.favorite {
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.favorite.active {
+    color: red;
+    transform: scale(1.2);
+}
+
+/* Kontrol kuantitas */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-controls .btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* Tombol Tambah */
+.add-to-cart {
+    font-size: 0.8rem;
+    padding: 0.4rem 0;
+}
+
+/* Animasi Hover */
+.add-to-cart:hover {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+.floating-cart {
+    background-color: #888888; /* Warna latar belakang putih */
+    border: 2px solid #28a745; /* Border hijau */
+    border-radius: 15px; /* Sudut bulat */
+    padding: 15px; /* Padding untuk konten */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan halus */
+    transition: box-shadow 0.3s ease;
+}
+
+/* Hover Effect untuk Floating Cart */
+.floating-cart:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bayangan lebih jelas saat hover */
+}
+
+/* Gaya untuk Judul dan Ringkasan */
+.floating-cart h5, .floating-cart h6 {
+    margin: 5px 0; /* Margin untuk jarak antar teks */
+}
+
+/* Gaya untuk Tombol Checkout */
+#checkout-button {
+    background-color: #28a745; /* Warna latar belakang tombol */
+    border: none; /* Menghilangkan border default */
+    border-radius: 25px; /* Sudut bulat untuk tombol */
+    color: #fff; /* Warna teks putih */
+    padding: 10px 20px; /* Padding untuk tombol */
+    font-weight: bold; /* Teks tebal */
+    width: 100%; /* Lebar tombol 100% */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover Effect untuk Tombol Checkout */
+#checkout-button:hover {
+    background-color: #5c5c5c; /* Warna saat hover */
+}
+
+/* DAFTAR */
+.order-summary-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 600px; /* Membatasi lebar container */
+}
+
+/* Judul Order Summary */
+.order-summary-title {
+    margin-bottom: 30px; /* Memberi ruang lebih bawah judul */
+    font-size: 32px; /* Ukuran font lebih besar untuk menarik perhatian */
+    font-weight: bold;
+    color: #28a745; /* Warna hijau cerah */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Bayangan teks yang lebih tebal */
+}
+
+/* List Group untuk Item Pesanan */
+.order-items-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+    background-color: #f8f9fa; /* Latar belakang yang lebih cerah */
+    border-radius: 12px; /* Sudut melengkung lebih halus */
+    padding: 15px; /* Ruang dalam untuk item */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Bayangan lebih kuat */
+}
+
+/* Item dalam Daftar Pesanan */
+.order-items-list li {
+    background-color: #ffffff; /* Latar belakang item */
+    padding: 15px;
+    border-radius: 8px; /* Sudut melengkung */
+    border: 1px solid #e0e0e0; /* Garis batas halus */
+    margin-bottom: 10px; /* Jarak antar item */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bayangan halus untuk efek kedalaman */
+    transition: transform 0.2s, box-shadow 0.2s; /* Animasi saat hover */
+}
+
+.order-items-list li:hover {
+    transform: translateY(-4px); /* Efek angkat saat hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Bayangan lebih kuat saat hover */
+}
+
+/* Total Pesanan */
+.order-total {
+    font-size: 24px; /* Ukuran font untuk total */
+    font-weight: bold;
+    color: #dc3545; /* Warna merah untuk total */
+    margin-top: 20px; /* Ruang atas untuk jarak dari daftar */
+    border-top: 2px solid #e0e0e0; /* Garis batas atas untuk pemisah */
+    padding-top: 15px; /* Ruang dalam atas untuk jarak */
+    background-color: #ffffff; /* Latar belakang putih untuk total */
+    border-radius: 8px; /* Sudut melengkung */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bayangan halus */
+}
+
+/* Animasi Halus untuk Total */
+.order-total span {
+    font-size: 26px; /* Ukuran font lebih besar untuk total harga */
+    font-weight: bold;
+    color: #dc3545; /* Warna merah untuk total harga */
+}
+
+/* Tambahan Gaya untuk Card Item */
+.order-items-list li {
+    display: flex;
+    justify-content: space-between; /* Membuat item sejajar dengan baik */
+    align-items: center; /* Vertikal sejajar */
+}
+
+/* Gaya untuk Nama dan Harga Item */
+.order-items-list li span {
+    font-weight: bold;
+}
+
+/* Gaya untuk informasi tambahan jika ada */
+.order-items-list li .item-extra {
+    font-size: 12px; /* Ukuran font lebih kecil untuk informasi tambahan */
+    color: #6c757d; /* Warna teks abu-abu */
+}
+
+/* Card Gaya untuk Informasi dan Transfer */
+.order-info-card,
+.order-bank-transfer-card {
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Judul Card */
+.card-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #28a745; /* Warna teks sukses */
+}
+
+/* Gaya Form Input */
+.order-form-group {
+    margin-bottom: 20px;
+}
+
+.order-form-label {
+    font-weight: bold;
+    color: #495057; /* Warna label yang lebih gelap */
+}
+
+.order-form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.order-form-control:focus {
+    border-color: #28a745; /* Warna border saat fokus */
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.25); /* Bayangan saat fokus */
+}
+
+/* Tombol */
+.order-btn {
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 18px;
+    width: 100%;
+    margin-top: 10px; /* Spasi antara tombol */
+}
+
+/* Tombol Utama */
+.btn-primary {
+    background-color: #28a745; /* Warna utama */
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #218838; /* Warna tombol saat hover */
+}
+
+/* Tombol Sekunder */
+.btn-secondary {
+    background-color: #6c757d; /* Warna sekunder */
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268; /* Warna tombol saat hover */
+}
+
+/* UNTUK BUTTON SALIN REK */
+.btn-outline-secondary {
+    border-color: #007bff; /* Ubah warna border sesuai kebutuhan */
+    color: #007bff; /* Ubah warna teks sesuai kebutuhan */
+}
+
+.btn-outline-secondary:hover {
+    background-color: #007bff; /* Warna latar belakang saat hover */
+    color: white; /* Warna teks saat hover */
+}
+
+
+/* Gaya Logo BCA */
+.bca-logo {
+    border-radius: 4px;
+    width: 40px; /* Ukuran logo BCA */
+    margin-right: 10px; /* Spasi antara logo dan teks */
+}
+
+/* ALAMAT */
+#map {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.address-options button {
+    width: 48%; /* Agar tombol memiliki lebar yang sama */
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    width: 300px;
+    border-radius: 5px;
+    animation: slideIn 0.5s ease;
+}
+
+#auto-detect-location {
+    background-color: #007bff; /* Sesuaikan dengan warna yang diinginkan */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px; /* Sesuaikan padding sesuai kebutuhan */
+    transition: background-color 0.3s ease;
+}
+
+#auto-detect-location:hover {
+    background-color: #0056b3; /* Warna saat hover */
+}
+
+.text-danger {
+    font-size: 0.9em;
+    margin-top: 5px; /* Memberikan jarak antara input dan keterangan */
+}
+
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+.notification .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+
+
+
+/* Media Query */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 0.8rem;
+    }
+
+    .card-text {
+        font-size: 0.7rem;
+    }
+
+    .rating {
+        font-size: 0.7rem;
+    }
+}
+
+        .rating {
+            color: gold;
+        }
+
+        .favorite {
+            color: gray;
+            cursor: pointer;
+        }
+
+        .favorite.active {
+            color: red;
+        }
+
+        .floating-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            width: 200px;
+            font-size: 0.8em;
+            transition: transform 0.3s ease-in-out;
+            transform: translateY(0);
+            opacity: 0;
+        }
+
+        .floating-cart.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .floating-cart {
+                width: 90%;
+                right: 5%;
+                bottom: 10px;
+            }
+            #menu-container {
+                margin-top: 20px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #00aa13, #2ecc71); padding: 5px 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <a class="navbar-brand" href="#" style="font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: bold; color: #ffffff;">
+            Bakso Viral77 Delivery
+            <i class="fas fa-shipping-fast text-white" style="margin-left: 5px;"></i>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="position: absolute; right: 1px; top: 60%; transform: translateY(-50%);">
+            <span class="navbar-toggler-icon" style="color: white; font-size: 1.5rem;"><i class="fas fa-bars"></i></span>
+        </button>
+        
+        
+        
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" onclick="showTab('menu')" style="font-family: 'Poppins', sans-serif; color: #ffffff;">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showTab('order-summary')" style="font-family: 'Poppins', sans-serif; color: #ffffff;">Daftar Pesanan</a>
+                </li>
+            </ul>
+            <button id="theme-toggle" class="btn btn-light ml-auto" style="font-family: 'Poppins', sans-serif; font-weight: bold; color: #00aa13;">Mode Gelap</button>
+        </div>
+    </nav>
+    
+    
+    
+    <div class="container mt-4" id="menu-container">
+        <h1 class="text-center mb-3" style="font-family: 'Poppins', sans-serif; font-weight: bold; color: black; text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);">
+            <i class="fas fa-utensils" style="color: black; margin-right: 10px; font-size: 1.5em;"></i> 
+            Pesan Makanan Favoritmu!
+        </h1>
+        
+        
+        
+        
+        
+        
+        <!-- Form Pencarian -->
+        <form class="form-inline ml-auto" id="search-form">
+            <input id="search-input" class="form-control mr-2" type="search" placeholder="Cari menu apa...." aria-label="Search">
+            <button id="search-button" class="btn btn-outline-light" type="button">Cari</button>
+        </form>
+    
+        <div class="row row-cols-2 row-cols-md-3 g-4">
+            
+            <!-- Bakso -->
+            <div class="col food-item mb-4" data-name="Bakso">
+                <div class="card shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="images/BAKSO_77_DEPAN.png" class="card-img-top rounded" alt="Bakso">
+                        <i class="favorite fas fa-heart text-danger position-absolute top-0 end-0 m-2" data-name="Bakso"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Bakso Spesial</h6>
+                        <p class="card-text text-success fw-bold">Rp 17.000</p>
+                        <p class="rating">⭐⭐⭐⭐⭐</p>
+                        <button class="btn btn-outline-success btn-sm w-100 add-to-cart" data-name="Bakso" data-price="15000">Tambah</button>
+                        <div class="quantity-controls d-none mt-2">
+                            <button class="btn btn-sm btn-secondary decrease" data-name="Bakso">-</button>
+                            <span id="quantity-Bakso" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-primary increase" data-name="Bakso">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- Mie Ayam -->
+             <div class="col food-item mb-4" data-name="Mie Ayam">
+                <div class="card shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="images/MIE_AYAM_77.png" class="card-img-top rounded" alt="Mie Ayam">
+                        <i class="favorite fas fa-heart text-danger position-absolute top-0 end-0 m-2" data-name="Mie Ayam"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Mie Ayam Bakso</h6>
+                        <p class="card-text text-success fw-bold">Rp 17.000</p>
+                        <p class="rating">⭐⭐⭐⭐⭐</p>
+                        <button class="btn btn-outline-success btn-sm w-100 add-to-cart" data-name="Mie Ayam" data-price="20000">Tambah</button>
+                        <div class="quantity-controls d-none mt-2">
+                            <button class="btn btn-sm btn-secondary decrease" data-name="Mie Ayam">-</button>
+                            <span id="quantity-MieAyam" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-primary increase" data-name="Mie Ayam">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Nasi Goreng -->
+            <div class="col food-item mb-4" data-name="Nasi Goreng">
+                <div class="card shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="images/NASI_GORENG_77.png" class="card-img-top rounded" alt="Nasi Goreng">
+                        <i class="favorite fas fa-heart text-danger position-absolute top-0 end-0 m-2" data-name="Nasi Goreng"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Nasi Goreng</h6>
+                        <p class="card-text text-success fw-bold">Rp 20.000</p>
+                        <p class="rating">⭐⭐⭐⭐⭐</p>
+                        <button class="btn btn-outline-success btn-sm w-100 add-to-cart" data-name="Nasi Goreng" data-price="20000">Tambah</button>
+                        <div class="quantity-controls d-none mt-2">
+                            <button class="btn btn-sm btn-secondary decrease" data-name="Nasi Goreng">-</button>
+                            <span id="quantity-NasiGoreng" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-primary increase" data-name="Nasi Goreng">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <!-- Mie Goreng -->
+            <div class="col food-item mb-4" data-name="Mie Goreng">
+                <div class="card shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="images/MIE_GORENG_77.png" class="card-img-top rounded" alt="Mie Goreng">
+                        <i class="favorite fas fa-heart text-danger position-absolute top-0 end-0 m-2" data-name="Mie Goreng"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Mie Goreng</h6>
+                        <p class="card-text text-success fw-bold">Rp 18.000</p>
+                        <p class="rating">⭐⭐⭐⭐⭐</p>
+                        <button class="btn btn-outline-success btn-sm w-100 add-to-cart" data-name="Mie Goreng" data-price="18000">Tambah</button>
+                        <div class="quantity-controls d-none mt-2">
+                            <button class="btn btn-sm btn-secondary decrease" data-name="Mie Goreng">-</button>
+                            <span id="quantity-MieGoreng" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-primary increase" data-name="Mie Goreng">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Nasi Ayam Geprek -->
+            <div class="col food-item mb-4" data-name="Nasi Ayam Geprek">
+                <div class="card shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="images/AYAM_GEPREK_77.png" class="card-img-top rounded" alt="Nasi Ayam Geprek">
+                        <i class="favorite fas fa-heart text-danger position-absolute top-0 end-0 m-2" data-name="Nasi Ayam Geprek"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Nasi Ayam Geprek</h6>
+                        <p class="card-text text-success fw-bold">Rp 25.000</p>
+                        <p class="rating">⭐⭐⭐⭐⭐</p>
+                        <button class="btn btn-outline-success btn-sm w-100 add-to-cart" data-name="Nasi Ayam Geprek" data-price="25000">Tambah</button>
+                        <div class="quantity-controls d-none mt-2">
+                            <button class="btn btn-sm btn-secondary decrease" data-name="Nasi Ayam Geprek">-</button>
+                            <span id="quantity-NasiAyamGeprek" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-primary increase" data-name="Nasi Ayam Geprek">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Capjay -->
+            <div class="col food-item mb-4" data-name="Capjay">
+                <div class="card shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img src="images/CAPCAY_77.png" class="card-img-top rounded" alt="Capjay">
+                        <i class="favorite fas fa-heart text-danger position-absolute top-0 end-0 m-2" data-name="Capjay"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Capjay</h6>
+                        <p class="card-text text-success fw-bold">Rp 22.000</p>
+                        <p class="rating">⭐⭐⭐⭐⭐</p>
+                        <button class="btn btn-outline-success btn-sm w-100 add-to-cart" data-name="Capjay" data-price="22000">Tambah</button>
+                        <div class="quantity-controls d-none mt-2">
+                            <button class="btn btn-sm btn-secondary decrease" data-name="Capjay">-</button>
+                            <span id="quantity-Capjay" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-primary increase" data-name="Capjay">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- Floating Cart -->
+    <div class="floating-cart">
+        <h5 class="text-success">Keranjang</h5>
+        <h6 id="cart-summary">0 Item Telah Ditambahkan</h6>
+        <h6>Total: <span id="total-price" class="text-danger">0</span></h6>
+        <button class="btn btn-primary btn-sm" id="checkout-button">Checkout</button>
+    </div>
+    
+    <!-- Order Summary -->
+    <div id="order-summary" class="order-summary-container mt-5" style="display: none;">
+        <h2 class="text-center text-success order-summary-title">
+            <i class="fas fa-receipt mr-2"></i>Daftar Pesanan
+        </h2>
+        <ul class="list-group order-items-list" id="order-items">
+            <!-- Item akan ditambahkan secara otomatis melalui JavaScript -->
+        </ul>
+        <h4 class="text-center order-total mt-3 font-weight-bold">
+            Total: <span id="order-total-price" class="text-danger">Rp 0</span>
+        </h4>
+        
+
+        <div class="order-info-card mt-4">
+            <div class="card-body">
+                <h5 class="card-title order-info-title">Informasi Pengiriman</h5>
+                <form id="order-form">
+                    <div class="form-group order-address-group">
+                        <label for="order-address" class="font-weight-bold">Alamat</label>
+                        <input type="text" class="form-control rounded-pill" id="order-address" placeholder="Masukkan alamat Anda" required>
+                        <small class="form-text text-danger">
+                            Kami hanya menerima penghantaran dalam jangkauan toko yakni radius 2,5 km. Silakan aktifkan lokasi di perangkat Anda dan tekan tombol di bawah ini untuk mengisi form alamat.
+                        </small>
+                    </div>
+                    <!-- Tombol untuk memilih lokasi otomatis -->
+                    <button type="button" class="btn btn-primary rounded-pill shadow-sm mt-2" id="auto-detect-location">
+                        <i class="fas fa-map-marker-alt"></i> Pilih Otomatis
+                    </button>
+                    <div class="form-group order-phone-group">
+                        <label for="order-phone">Nomor HP/WA</label>
+                        <input type="text" class="form-control rounded-pill" id="order-phone" required>
+                    </div>
+                    <!-- Ini adalah div untuk notifikasi, tapi kita akan menggunakan SweetAlert2 -->
+                    <div id="notification" style="display: none;">
+                        <p id="notification-message"></p>
+                        <button id="close-notification" class="btn btn-primary">Tutup</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    
+
+
+        <div class="bank-transfer-card mt-4">
+            <div class="card-body">
+                <h5 class="card-title bank-transfer-title">Transfer ke Rekening</h5>
+                <div class="d-flex align-items-center bank-transfer-info">
+                    <img src="images/LOGO_BCA.png" alt="Logo BCA" class="bca-logo me-2" style="width: 40px;">
+                    <div class="flex-grow-1">
+                        <label for="bank-account" class="bank-account-label">Rekening BCA</label>
+                        <div class="d-flex align-items-center">
+                            <input type="text" class="form-control bank-account-input" value="1234567890" readonly id="bank-account-input">
+                            <button class="btn btn-outline-secondary btn-sm ms-2" id="copy-button">
+                                <i class="fas fa-copy"></i> <!-- Ikon salin -->
+                            </button>
+                        </div>
+                        <small class="form-text text-muted bank-account-owner">Nama: [Ichwan Maulana]</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary mt-3 confirm-order-button" id="confirm-order">Saya Sudah Bayar</button>
+        <button type="button" class="btn btn-secondary mt-2 back-to-menu-button" id="back-to-menu">Kembali ke Menu</button>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let cart = {};
+
+            function updateCart() {
+        let totalQuantity = 0;
+        let totalPrice = 0;
+
+        for (let item in cart) {
+            totalQuantity += cart[item].quantity;
+            totalPrice += cart[item].quantity * cart[item].price;
+        }
+
+        $('#cart-summary').text(totalQuantity + " Item Telah Ditambahkan");
+        $('#total-price').text(totalPrice);
+
+        if (totalQuantity > 0) {
+            $('.floating-cart').addClass('show');
+        } else {
+            $('.floating-cart').removeClass('show');
+        }
+    }
+
+    // Tambahkan item ke keranjang
+    $('.add-to-cart').on('click', function () {
+        const name = $(this).data('name');
+        const price = $(this).data('price');
+
+        if (!cart[name]) {
+            cart[name] = { quantity: 0, price: price };
+        }
+
+        cart[name].quantity++;
+        updateCart();
+
+        // Tampilkan kontrol kuantitas
+        $(this).siblings('.quantity-controls').removeClass('d-none');
+        $('#quantity-' + name.replace(" ", "")).text(cart[name].quantity);
+    });
+
+    // Tambah kuantitas
+    $('.increase').on('click', function () {
+        const name = $(this).data('name');
+        cart[name].quantity++;
+        $('#quantity-' + name.replace(" ", "")).text(cart[name].quantity);
+        updateCart();
+    });
+
+    // Kurangi kuantitas
+    $('.decrease').on('click', function () {
+        const name = $(this).data('name');
+        if (cart[name].quantity > 0) {
+            cart[name].quantity--;
+            $('#quantity-' + name.replace(" ", "")).text(cart[name].quantity);
+            if (cart[name].quantity === 0) {
+                delete cart[name];
+                $(this).parent().addClass('d-none'); // Sembunyikan kontrol kuantitas jika nol
+            }
+        }
+        updateCart();
+    });
+
+    
+
+            // Menampilkan ringkasan pesanan
+$('#checkout-button').on('click', function () {
+    $('#order-summary').show();
+    $('#menu-container').hide();
+    
+    // Sembunyikan keranjang saat di halaman ringkasan
+    $('.floating-cart').removeClass('show');
+
+    $('#order-items').empty();
+    let orderTotalPrice = 0;
+    for (let item in cart) {
+        const itemPrice = cart[item].price * cart[item].quantity;
+        orderTotalPrice += itemPrice;
+        $('#order-items').append(`<li class="list-group-item">${item}: ${cart[item].quantity} x Rp ${cart[item].price} = Rp ${itemPrice}</li>`);
+    }
+    $('#order-total-price').text(orderTotalPrice);
+});
+
+
+            // Kembali ke menu
+            $('#back-to-menu').on('click', function () {
+                $('#order-summary').hide();
+                $('#menu-container').show();
+                $('.floating-cart').removeClass('show');
+            });
+
+            // Konfirmasi pesanan
+            $('#confirm-order').on('click', function () {
+                const address = $('#order-address').val();
+                const phone = $('#order-phone').val();
+
+                if (address && phone) {
+                    alert('Pesanan Anda telah dikonfirmasi!\nAlamat: ' + address + '\nNomor HP/WA: ' + phone);
+                    cart = {}; // Reset keranjang setelah konfirmasi
+                    updateCart();
+                    $('#order-summary').hide();
+                    $('#menu-container').show();
+                } else {
+                    alert('Mohon lengkapi alamat dan nomor HP/WA.');
+                }
+            });
+
+            // Fitur pencarian
+            $('#search-button').on('click', function () {
+                const query = $('#search-input').val().toLowerCase();
+                $('.food-item').each(function () {
+                    const itemName = $(this).data('name').toLowerCase();
+                    $(this).toggle(itemName.includes(query));
+                });
+            });
+            
+
+            // Favoritkan Menu
+            $('.favorite').on('click', function () {
+                $(this).toggleClass('active');
+                const name = $(this).data('name');
+                if ($(this).hasClass('active')) {
+                    alert(name + ' telah ditambahkan ke daftar favorit!');
+                } else {
+                    alert(name + ' telah dihapus dari daftar favorit!');
+                }
+            });
+
+            // MODE GELAP
+            let isDarkMode = false;
+
+            $('#theme-toggle').on('click', function () {
+                isDarkMode = !isDarkMode;
+                document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+                $(this).text(isDarkMode ? 'Mode Terang' : 'Mode Gelap');
+            });
+
+            $('.favorite').on('click', function () {
+                $(this).toggleClass('active');
+            });
+            document.getElementById('copy-button').addEventListener('click', function() {
+                const input = document.getElementById('bank-account-input');
+                input.select();
+                document.execCommand('copy');
+                alert('Rekening telah disalin: ' + input.value);
+            });
+
+            // SCRIPT UNTUK ALAMAT
+            document.getElementById('auto-detect-location').addEventListener('click', function() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Koordinat lokasi toko
+            var storeLocation = { lat: -7.6113, lng: 112.7208 }; // Ganti dengan latitude dan longitude dari lokasi toko kamu
+
+            // Hitung jarak antara lokasi pengguna dan lokasi toko
+            var distance = calculateDistance(userLocation, storeLocation);
+
+            if (distance <= 2.5) {
+                // Simpan lokasi jika dalam jangkauan
+                document.getElementById('order-address').value = `Lat: ${userLocation.lat}, Lng: ${userLocation.lng}`;
+            } else {
+                // Tampilkan notifikasi menggunakan SweetAlert2 jika melebihi radius
+                showNotification('Mohon maaf lokasi Anda melebihi jangkauan radius toko kami yakni max 2,5km. Jika Anda tetap ingin memesan dan berada di daerah Bangil/Pandaan, silakan tekan tombol WhatsApp pesan di bawah ini.');
+            }
+        }, function() {
+            alert('Geolocation gagal diakses.');
+        });
+    } else {
+        alert('Browser Anda tidak mendukung Geolocation.');
+    }
+});
+
+// Fungsi untuk menghitung jarak
+function calculateDistance(loc1, loc2) {
+    var R = 6371; // Radius bumi dalam km
+    var dLat = degreesToRadians(loc2.lat - loc1.lat);
+    var dLng = degreesToRadians(loc2.lng - loc1.lng);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(degreesToRadians(loc1.lat)) * Math.cos(degreesToRadians(loc2.lat)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var distance = R * c; // dalam km
+    return distance;
+}
+
+// Fungsi untuk mengkonversi derajat ke radian
+function degreesToRadians(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
+// Fungsi untuk menampilkan notifikasi menggunakan SweetAlert2
+function showNotification(message) {
+    Swal.fire({
+        title: 'Pemberitahuan!',
+        text: message,
+        icon: 'warning',
+        confirmButtonText: 'Tutup',
+        showCancelButton: true,
+        cancelButtonText: 'Pesan Lewat WhatsApp',
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-success'
+        }
+    }).then((result) => {
+        if (result.isDismissed) {
+            // Jika pengguna memilih untuk menghubungi lewat WhatsApp
+            window.open('https://wa.me/your-number', '_blank'); // Ganti 'your-number' dengan nomor WhatsApp Anda
+        }
+    });
+}
+
+
+
+
+
+
+
+        });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_ACTUAL_API_KEY"></script>
+
+</body>
+</html>
+
